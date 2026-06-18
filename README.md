@@ -1,5 +1,7 @@
 # Laravel DataFast AI Crawl
 
+![Laravel DataFast AI Crawl — bot traffic tracking](https://raw.githubusercontent.com/monteduro/laravel-datafast-aicrawl/main/art/banner.jpeg)
+
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/monteduro/laravel-datafast-aicrawl.svg)](https://packagist.org/packages/monteduro/laravel-datafast-aicrawl)
 [![Total Downloads](https://img.shields.io/packagist/dt/monteduro/laravel-datafast-aicrawl.svg)](https://packagist.org/packages/monteduro/laravel-datafast-aicrawl)
 [![License](https://img.shields.io/packagist/l/monteduro/laravel-datafast-aicrawl.svg)](LICENSE)
