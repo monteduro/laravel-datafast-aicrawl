@@ -1,0 +1,50 @@
+{
+    "name": "monteduro/laravel-datafast-aicrawl",
+    "description": "Server-side AI crawler & bot traffic tracking for Laravel, reporting to DataFast. Unofficial PHP port of @datafast/ai-crawl.",
+    "keywords": ["laravel", "datafast", "ai", "crawler", "bot", "bot-traffic", "analytics", "seo", "llm", "middleware"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "monteduro",
+            "homepage": "https://github.com/monteduro"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Monteduro\\DataFastAiCrawl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Monteduro\\DataFastAiCrawl\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Monteduro\\DataFastAiCrawl\\DataFastAiCrawlServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
