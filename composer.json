@@ -30,7 +30,9 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": "vendor/bin/pest",
+        "sync-catalog": "@php bin/sync-catalog.php",
+        "sync-catalog:check": "@php bin/sync-catalog.php --check"
     },
     "extra": {
         "laravel": {

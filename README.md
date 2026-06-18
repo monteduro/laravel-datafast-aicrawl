@@ -68,11 +68,16 @@ To register the middleware manually instead, set `DATAFAST_AICRAWL_AUTO_MIDDLEWA
 
 ## Keeping the crawler list fresh
 
-The catalog in [`src/Support/CrawlerCatalog.php`](src/Support/CrawlerCatalog.php) is static (ported from the upstream bundle, not fetched at runtime). Periodically diff it against upstream — the equivalent of `npm update`:
+The catalog data lives in [`resources/crawlers.php`](resources/crawlers.php), generated from the upstream npm bundle (not fetched at runtime). You normally never touch it — a **GitHub Action runs weekly**, regenerates it from `@datafast/ai-crawl`, runs the tests, and opens a PR when something changed. Merging that PR auto-tags the next patch version, which Packagist publishes.
+
+To run the sync manually:
 
 ```bash
-curl -sL https://unpkg.com/@datafast/ai-crawl/dist/index.js
+composer sync-catalog:check   # show drift vs upstream (exits non-zero if outdated)
+composer sync-catalog         # regenerate resources/crawlers.php
 ```
+
+> The weekly workflow needs **Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests"** enabled on the repo.
 
 ## Testing
 

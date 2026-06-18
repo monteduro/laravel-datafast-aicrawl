@@ -1,0 +1,59 @@
+name: release
+
+# When the generated crawler catalog changes on main (e.g. a sync PR is
+# merged), run the tests and — if green — tag the next patch version.
+# Packagist picks up the new tag via its GitHub webhook and publishes it.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'resources/crawlers.php'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Skip if this commit is already tagged
+        id: guard
+        run: |
+          if git describe --exact-match --tags HEAD >/dev/null 2>&1; then
+            echo "tagged=true" >> "$GITHUB_OUTPUT"
+            echo "Commit already tagged — nothing to do."
+          else
+            echo "tagged=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup PHP
+        if: steps.guard.outputs.tagged == 'false'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Install dependencies
+        if: steps.guard.outputs.tagged == 'false'
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run tests
+        if: steps.guard.outputs.tagged == 'false'
+        run: composer test
+
+      - name: Compute and push next patch tag
+        if: steps.guard.outputs.tagged == 'false'
+        run: |
+          latest=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+          latest=${latest:-v0.0.0}
+          version=${latest#v}
+          IFS=. read -r major minor patch <<< "$version"
+          next="v${major}.${minor}.$((patch + 1))"
+          echo "Latest tag: ${latest} → tagging ${next}"
+          git tag "$next"
+          git push origin "$next"

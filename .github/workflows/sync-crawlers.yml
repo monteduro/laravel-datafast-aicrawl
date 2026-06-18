@@ -1,0 +1,63 @@
+name: sync-crawlers
+
+# Weekly check against the upstream @datafast/ai-crawl npm package. If the
+# crawler catalog drifted, regenerate it, run the tests, and open a PR for
+# review. Merging that PR triggers the release workflow (auto patch tag).
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # every Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Regenerate catalog from upstream
+        run: composer sync-catalog
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- resources/crawlers.php; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run tests
+        if: steps.diff.outputs.changed == 'true'
+        run: composer test
+
+      - name: Open pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/sync-crawler-catalog
+          delete-branch: true
+          title: 'chore: sync crawler catalog with @datafast/ai-crawl'
+          commit-message: 'chore: sync crawler catalog with @datafast/ai-crawl'
+          labels: |
+            automated
+            crawlers
+          body: |
+            Automated weekly sync of the AI crawler catalog from the upstream
+            npm package [`@datafast/ai-crawl`](https://www.npmjs.com/package/@datafast/ai-crawl).
+
+            Review the changes in `resources/crawlers.php`, then **merge to release**
+            — merging tags the next patch version automatically.
