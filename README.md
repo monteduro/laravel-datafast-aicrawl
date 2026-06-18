@@ -1,5 +1,9 @@
 # Laravel DataFast AI Crawl
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/monteduro/laravel-datafast-aicrawl.svg)](https://packagist.org/packages/monteduro/laravel-datafast-aicrawl)
+[![Total Downloads](https://img.shields.io/packagist/dt/monteduro/laravel-datafast-aicrawl.svg)](https://packagist.org/packages/monteduro/laravel-datafast-aicrawl)
+[![License](https://img.shields.io/packagist/l/monteduro/laravel-datafast-aicrawl.svg)](LICENSE)
+
 Server-side **AI crawler & bot traffic tracking** for Laravel, reporting to [DataFast](https://datafa.st).
 
 See when AI assistants (ChatGPT, Claude, Perplexity…), search crawlers (Googlebot, Bingbot…) and model-training bots (GPTBot, ClaudeBot, CCBot…) request pages on your site. These bots fetch raw HTML and skip frontend JavaScript, so DataFast's browser script never sees them — this package detects them in your backend.
